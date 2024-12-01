@@ -8,7 +8,7 @@ const parseBody: middlewareT = (req: requestT) => {
   return new Promise((res, rej) => {
     let body = '';
     if(method === 'get' || method === 'head') {
-      return res(null);
+      return res();
     }
 
     req
@@ -19,9 +19,11 @@ const parseBody: middlewareT = (req: requestT) => {
     .on('end', () => {
       try {
         req.json = JSON.parse(body);
-      } catch {}
-      req.body = body ? body : undefined;
-      res(null);
+      } catch {
+        req.json = null;
+      }
+      req.body = body ? body : null;
+      res();
     });
   });
 };

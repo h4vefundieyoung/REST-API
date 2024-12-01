@@ -1,7 +1,12 @@
 import { IncomingMessage } from "http";
 
-export type requestT = { body?: string, parsedUrl?: URL, json?: Object } & IncomingMessage;
-export type middlewareT = (req: requestT) => void;
+export type requestT = { 
+  body: string | null, 
+  uuid: string | null, 
+  parsedUrl: URL | null, 
+  json: { [k: string]: any } | null
+} & IncomingMessage;
+export type middlewareT = (req: requestT) => void | Promise<void>;
 export type middlewareParamsT = Parameters<middlewareT>;
 
 export class MiddlewareManager {
@@ -18,6 +23,7 @@ export class MiddlewareManager {
           await middleware(...args);
         } catch (e) {
           rej(e);
+          break;
         }
       };
       res(args);
