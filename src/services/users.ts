@@ -26,7 +26,7 @@ class UsersService {
     });
   }
 
-  async createUser (userData: ICreateUserDTO) {
+  async createUser (userData: CreateUserDTO) {
     return mockedDB.users.push(new User(userData));
   }
 

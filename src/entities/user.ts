@@ -11,7 +11,7 @@ export class User extends Entity {
   createdAt: string;
   updatedAt: string;
   
-  constructor ({ login, password }: ICreateUserDTO) {
+  constructor ({ login, password }: CreateUserDTO) {
     super();
     const timestamp = Date.now().toString();
 

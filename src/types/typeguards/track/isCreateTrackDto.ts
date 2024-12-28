@@ -1,4 +1,4 @@
-export function isUpdateTrackDTO(data: unknown): data is IUpdateTrackDTO {
+export function isCreateTrackDTO(data: unknown): data is CreateTrackDTO {
   return (
     typeof data === 'object' &&
     data !== null &&

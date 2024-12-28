@@ -1,23 +1,21 @@
-import { compare, hash } from "bcrypt";
-
 import { mockedDB } from "../database";
 import { Track } from "../entities";
 
 class TracksService {
   async getTrack (id: string) {
     const track = mockedDB.tracks.find((track) => track.id === id);
-    return track ? track : null;
+    return track || null;
   }
 
   async getTracks () {
     return mockedDB.tracks;
   }
 
-  async createTrack (trackData: ICreateTrackDTO) {
+  async createTrack (trackData: CreateTrackDTO) {
     return mockedDB.tracks.push(new Track(trackData));
   }
 
-  async updateTrack (id: string, data: IUpdateTrackDTO) {
+  async updateTrack (id: string, data: UpdateTrackDTO) {
     const track = mockedDB.tracks.find((track) => track.id === id);
     if (track) {
       Object.assign(track, data);

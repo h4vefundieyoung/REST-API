@@ -1,13 +1,13 @@
 import { ServerResponse } from "http";
 
 import { Controller } from "../types/abstractions";
-import { tracksService } from "../services";
-import { isCreateTrackDTO, isUpdateTrackDTO } from "../types/typeguards";
+import { artistsService } from "../services";
+import { isCreateArtistDTO, isUpdateArtistDTO } from "../types/typeguards";
 
-class TracksController extends Controller<UpdateTrackDTO, CreateTrackDTO> {
+class ArtistsController extends Controller<UpdateArtistDTO, CreateArtistDTO> {
   async get (id: string | null, res: ServerResponse) {
     try {
-      const data = id ? await tracksService.getTrack(id) : await tracksService.getTracks();
+      const data = id ? await artistsService.getArtist(id) : await artistsService.getArtists();
       if (data) {
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify(data));
@@ -21,10 +21,10 @@ class TracksController extends Controller<UpdateTrackDTO, CreateTrackDTO> {
     }
   }
 
-  async post (body: CreateTrackDTO, res: ServerResponse) {
-    if (isCreateTrackDTO(body)) {
+  async post (body: CreateArtistDTO, res: ServerResponse) {
+    if (isCreateArtistDTO(body)) {
       try {
-        await tracksService.createTrack(body);
+        await artistsService.createArtist(body);
         res.writeHead(201)
       } catch (e) {
         res.writeHead(500)
@@ -36,14 +36,14 @@ class TracksController extends Controller<UpdateTrackDTO, CreateTrackDTO> {
     }
   }
 
-  async put (id: string, body: UpdateTrackDTO, res: ServerResponse) {
-    if(isUpdateTrackDTO(body)) {
-      const userData = await tracksService.getTrack(id);
+  async put (id: string, body: UpdateArtistDTO, res: ServerResponse) {
+    if(isUpdateArtistDTO(body)) {
+      const userData = await artistsService.getArtist(id);
       if (!userData) {
         res.writeHead(404);
         return res.end();
       }
-      await tracksService.updateTrack(id, body)
+      await artistsService.updateArtist(id, body)
       res.writeHead(200);
       res.end();
     } else {
@@ -54,7 +54,7 @@ class TracksController extends Controller<UpdateTrackDTO, CreateTrackDTO> {
 
   async delete (id: string, res: ServerResponse) {
     try {
-      const isDeleted = await tracksService.deleteTrack(id);
+      const isDeleted = await artistsService.deleteArtist(id);
       res.writeHead(isDeleted ? 204 : 404);
     } catch (e) {
       res.writeHead(500);
@@ -63,4 +63,4 @@ class TracksController extends Controller<UpdateTrackDTO, CreateTrackDTO> {
   }
 }
 
-export const tracksController = new TracksController();
+export const tracksController = new ArtistsController();

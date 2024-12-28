@@ -1,4 +1,4 @@
-export function isCreateUserDTO(data: unknown): data is ICreateUserDTO {
+export function isCreateUserDTO(data: unknown): data is CreateUserDTO {
   return (
     typeof data === 'object' &&
     data !== null &&

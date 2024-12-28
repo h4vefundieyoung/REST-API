@@ -6,7 +6,7 @@ export class Track extends Entity {
   albumId: string | null;
   duration: number;
 
-  constructor ({ name, artistId, albumId, duration }: ICreateTrackDTO) {
+  constructor ({ name, artistId, albumId, duration }: CreateTrackDTO) {
     super();
     this.name = name;
     this.artistId = artistId;

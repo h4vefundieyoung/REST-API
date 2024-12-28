@@ -1,4 +1,4 @@
-export function isUpdateUserDTO(data: unknown): data is IUpdateUserDTO {
+export function isUpdateUserDTO(data: unknown): data is UpdateUserDTO {
   return (
     typeof data === 'object' &&
     data !== null &&

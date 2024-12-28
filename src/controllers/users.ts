@@ -5,7 +5,7 @@ import { usersService } from "../services";
 import { Controller } from "../types/abstractions";
 
 
-class UsersController extends Controller<IUpdateUserDTO, ICreateUserDTO> {
+class UsersController extends Controller<UpdateUserDTO, CreateUserDTO> {
   async get (id: string | null, res: ServerResponse) {
     try {
       const data = id ? await usersService.getUser(id) : await usersService.getUsers();
@@ -23,7 +23,7 @@ class UsersController extends Controller<IUpdateUserDTO, ICreateUserDTO> {
     }
   }
 
-  async post (body: ICreateUserDTO, res: ServerResponse) {
+  async post (body: CreateUserDTO, res: ServerResponse) {
     if (isCreateUserDTO(body)) {
       try {
         await usersService.createUser(body);
@@ -38,7 +38,7 @@ class UsersController extends Controller<IUpdateUserDTO, ICreateUserDTO> {
     }
   }
 
-  async put (id: string, body: IUpdateUserDTO, res: ServerResponse) {
+  async put (id: string, body: UpdateUserDTO, res: ServerResponse) {
     if(isUpdateUserDTO(body)) {
       const { oldPassword, newPassword } = body;
       const userData = await usersService.getUser(id);

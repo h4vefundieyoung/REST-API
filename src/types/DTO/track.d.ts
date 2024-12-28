@@ -1,4 +1,4 @@
-declare interface ITrackDTO {
+declare interface TrackDTO {
   id: string;
   name: string;
   artistId: string | null;
@@ -6,5 +6,5 @@ declare interface ITrackDTO {
   duration: number;
 }
 
-declare interface ICreateTrackDTO extends Omit<ITrackDTO, "id"> {}
-declare interface IUpdateTrackDTO extends ICreateTrackDTO {}
+declare interface CreateTrackDTO extends Omit<TrackDTO, "id"> {}
+declare interface UpdateTrackDTO extends CreateTrackDTO {}

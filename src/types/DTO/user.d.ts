@@ -1,4 +1,4 @@
-declare interface IUserDTO {
+declare interface UserDTO {
   id: string;
   login: string;
   version: number;
@@ -6,12 +6,12 @@ declare interface IUserDTO {
   updatedAt: number;
 }
 
-declare interface IUpdateUserDTO {
+declare interface UpdateUserDTO {
   oldPassword: string;
   newPassword: string;
 }
 
-declare interface ICreateUserDTO {
+declare interface CreateUserDTO {
   login: string;
   password: string;
 }
