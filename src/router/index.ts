@@ -1,28 +1,31 @@
 import { ServerResponse } from "node:http";
 
-import { usersController, tracksController } from "../controllers";
-import { httpMethods } from "../types/httpMethods";
+import { usersController, tracksController, artistsController, albumsController } from "../controllers";
+import { httpMethod, httpStatus } from "../types/http";
 
 import type { requestT } from "../middlewares";
 import type { Controller } from "../types/abstractions";
 
-const { GET, POST, PUT, DELETE } = httpMethods;
+const { GET, POST, PUT, DELETE } = httpMethod;
+const { NOT_FOUND, NOT_ALLOWED } = httpStatus;
 
 class AppRouter {
   controllers: { [k: string]: Controller } = {
     users: usersController,
-    tracks: tracksController
+    tracks: tracksController,
+    artists: artistsController,
+    albums: albumsController
   }
   
   processRequest (req: requestT, res: ServerResponse) {
     const { method, json, parsedUrl, uuid } = req;
     const { pathname } = parsedUrl!;
     const separatorIndex = pathname.indexOf("/", 1);
-    const endpoint = pathname.slice(1, ~separatorIndex ? separatorIndex : undefined);
+    const endpoint = ~separatorIndex ? pathname.slice(1) : pathname.slice(1, separatorIndex);
     const controller = this.controllers[endpoint];
     
     if (!controller) {
-      res.writeHead(404);
+      res.writeHead(NOT_FOUND);
       res.end();
       return;
     }
@@ -33,7 +36,7 @@ class AppRouter {
       case DELETE: { controller.delete(uuid, res); break; }
       case GET: { controller.get(uuid, res); break; }
       default: { 
-        res.writeHead(405); 
+        res.writeHead(NOT_ALLOWED); 
         res.end(); 
       };
     }

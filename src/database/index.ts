@@ -1,11 +1,13 @@
-import { User } from "../entities";
+import { User, Track, Artist, Album } from "../entities";
 
 export const mockedDB: {
   users: User[]
-  tracks: TrackDTO[]
-  artists: ArtistDTO[]
+  tracks: Track[]
+  artists: Artist[]
+  albums: Album[]
 } = {
   users: [],
   tracks: [],
-  artists: []
+  artists: [],
+  albums: []
 };

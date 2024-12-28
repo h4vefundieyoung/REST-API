@@ -6,3 +6,6 @@ export { isUpdateUserDTO } from "./user/isUpdateUserDto";
 export { isArtistDTO } from "./artist/isArtistDto";
 export { isCreateArtistDTO } from "./artist/isCreateArtistDto";
 export { isUpdateArtistDTO } from "./artist/isUpdateArtistDto";
+export { isAlbumDTO } from "./album/isAlbumDto";
+export { isCreateAlbumDTO } from "./album/isCreateAlbumDto";
+export { isUpdateAlbumDTO } from "./album/isUpdateAlbumDto";

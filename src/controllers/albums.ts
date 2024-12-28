@@ -1,16 +1,16 @@
 import { ServerResponse } from "http";
 
 import { Controller } from "../types/abstractions";
-import { tracksService } from "../services";
-import { isCreateTrackDTO, isUpdateTrackDTO } from "../types/typeguards";
-import { httpStatus } from "../types/http";
+import { albumsService } from "../services";
+import { isCreateAlbumDTO, isUpdateAlbumDTO } from "../types/typeguards";
+import { httpStatus } from "../types/http/httpStatus";
 
 const { OK, CREATED, INTERNAL_SERVER_ERROR, NOT_FOUND, BAD_REQUEST, NO_CONTENT } = httpStatus;
 
-class TracksController extends Controller<UpdateTrackDTO, CreateTrackDTO> {
+class AlbumsController extends Controller<UpdateAlbumDTO, CreateAlbumDTO> {
   async get (id: string | null, res: ServerResponse) {
     try {
-      const data = id ? await tracksService.getTrack(id) : await tracksService.getTracks();
+      const data = id ? await albumsService.getAlbum(id) : await albumsService.getAlbums();
       if (data) {
         res.writeHead(OK, { "Content-Type": "application/json" });
         res.end(JSON.stringify(data));
@@ -24,10 +24,10 @@ class TracksController extends Controller<UpdateTrackDTO, CreateTrackDTO> {
     }
   }
 
-  async post (body: CreateTrackDTO, res: ServerResponse) {
-    if (isCreateTrackDTO(body)) {
+  async post (body: CreateAlbumDTO, res: ServerResponse) {
+    if (isCreateAlbumDTO(body)) {
       try {
-        await tracksService.createTrack(body);
+        await albumsService.createAlbum(body);
         res.writeHead(CREATED)
       } catch (e) {
         res.writeHead(INTERNAL_SERVER_ERROR)
@@ -39,14 +39,14 @@ class TracksController extends Controller<UpdateTrackDTO, CreateTrackDTO> {
     }
   }
 
-  async put (id: string, body: UpdateTrackDTO, res: ServerResponse) {
-    if(isUpdateTrackDTO(body)) {
-      const userData = await tracksService.getTrack(id);
+  async put (id: string, body: UpdateAlbumDTO, res: ServerResponse) {
+    if(isUpdateAlbumDTO(body)) {
+      const userData = await albumsService.getAlbum(id);
       if (!userData) {
         res.writeHead(NOT_FOUND);
         return res.end();
       }
-      await tracksService.updateTrack(id, body)
+      await albumsService.updateAlbum(id, body)
       res.writeHead(OK);
       res.end();
     } else {
@@ -57,7 +57,7 @@ class TracksController extends Controller<UpdateTrackDTO, CreateTrackDTO> {
 
   async delete (id: string, res: ServerResponse) {
     try {
-      const isDeleted = await tracksService.deleteTrack(id);
+      const isDeleted = await albumsService.deleteAlbum(id);
       res.writeHead(isDeleted ? NO_CONTENT : NOT_FOUND);
     } catch (e) {
       res.writeHead(INTERNAL_SERVER_ERROR);
@@ -66,4 +66,4 @@ class TracksController extends Controller<UpdateTrackDTO, CreateTrackDTO> {
   }
 }
 
-export const tracksController = new TracksController();
+export const albumsController = new AlbumsController();

@@ -3,7 +3,9 @@ import { ServerResponse } from "http";
 import { isCreateUserDTO, isUpdateUserDTO } from "../types/typeguards";
 import { usersService } from "../services";
 import { Controller } from "../types/abstractions";
+import { httpStatus } from "../types/http";
 
+const { OK, CREATED, INTERNAL_SERVER_ERROR, NOT_FOUND, BAD_REQUEST, NO_CONTENT } = httpStatus;
 
 class UsersController extends Controller<UpdateUserDTO, CreateUserDTO> {
   async get (id: string | null, res: ServerResponse) {
@@ -11,14 +13,14 @@ class UsersController extends Controller<UpdateUserDTO, CreateUserDTO> {
       const data = id ? await usersService.getUser(id) : await usersService.getUsers();
 
       if (data) {
-        res.writeHead(200, { "Content-Type": "application/json" });
+        res.writeHead(OK, { "Content-Type": "application/json" });
         res.end(JSON.stringify(data));
       } else {
-        res.writeHead(404);
+        res.writeHead(NOT_FOUND);
         res.end();
       }
     } catch (e) {
-      res.writeHead(500);
+      res.writeHead(INTERNAL_SERVER_ERROR);
       res.end();
     }
   }
@@ -27,13 +29,13 @@ class UsersController extends Controller<UpdateUserDTO, CreateUserDTO> {
     if (isCreateUserDTO(body)) {
       try {
         await usersService.createUser(body);
-        res.writeHead(201)
+        res.writeHead(CREATED)
       } catch (e) {
-        res.writeHead(500)
+        res.writeHead(INTERNAL_SERVER_ERROR)
       }
       res.end();
     } else {
-      res.writeHead(400);
+      res.writeHead(BAD_REQUEST);
       res.end();
     }
   }
@@ -44,7 +46,7 @@ class UsersController extends Controller<UpdateUserDTO, CreateUserDTO> {
       const userData = await usersService.getUser(id);
       
       if (!userData) {
-        res.writeHead(404);
+        res.writeHead(NOT_FOUND);
         return res.end();
       }
       
@@ -56,10 +58,10 @@ class UsersController extends Controller<UpdateUserDTO, CreateUserDTO> {
       }
   
       await usersService.updateUserPassword(id, newPassword);
-      res.writeHead(200);
+      res.writeHead(OK);
       res.end();
     } else {
-      res.writeHead(400)
+      res.writeHead(BAD_REQUEST)
       res.end();
     }
   }
@@ -67,9 +69,9 @@ class UsersController extends Controller<UpdateUserDTO, CreateUserDTO> {
   async delete (id: string, res: ServerResponse) {
     try {
       const isDeleted = await usersService.deleteUser(id);
-      res.writeHead(isDeleted ? 204 : 404);
+      res.writeHead(isDeleted ? NO_CONTENT : NOT_FOUND);
     } catch (e) {
-      res.writeHead(500);
+      res.writeHead(INTERNAL_SERVER_ERROR);
     }
     res.end();
   }

@@ -4,6 +4,9 @@ import 'dotenv/config'
 import { MiddlewareManager, requestT } from "./middlewares";
 import { appRouter } from "./router";
 import { CustomError } from "./types/abstractions";
+import { httpStatus } from "./types/http";
+
+const { INTERNAL_SERVER_ERROR } = httpStatus;
 
 const PORT = process.env.CLUSTER_PORT || process.env.APP_PORT || 4000;
 const server = createServer(async (req, res) => {
@@ -15,7 +18,7 @@ const server = createServer(async (req, res) => {
             res.writeHead(e.status);
             res.end(e.toString());
         } else {
-            res.writeHead(500);
+            res.writeHead(INTERNAL_SERVER_ERROR);
             res.end();
         }
     }
