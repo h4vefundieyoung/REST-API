@@ -3,14 +3,14 @@ import { ServerResponse } from "http";
 import { Controller } from "../types/abstractions";
 import { tracksService } from "../services";
 import { isCreateTrackDTO, isUpdateTrackDTO } from "../types/typeguards";
-import { httpStatus } from "../types/http";
+import { httpStatus, httpRequest } from "../types/http";
 
 const { OK, CREATED, INTERNAL_SERVER_ERROR, NOT_FOUND, BAD_REQUEST, NO_CONTENT } = httpStatus;
 
-class TracksController extends Controller<UpdateTrackDTO, CreateTrackDTO> {
-  async get (id: string | null, res: ServerResponse) {
+class TracksController extends Controller {
+  async get ({ uuid }: httpRequest, res: ServerResponse) {
     try {
-      const data = id ? await tracksService.getTrack(id) : await tracksService.getTracks();
+      const data = uuid ? await tracksService.getTrack(uuid) : await tracksService.getTracks();
       if (data) {
         res.writeHead(OK, { "Content-Type": "application/json" });
         res.end(JSON.stringify(data));
@@ -24,10 +24,10 @@ class TracksController extends Controller<UpdateTrackDTO, CreateTrackDTO> {
     }
   }
 
-  async post (body: CreateTrackDTO, res: ServerResponse) {
-    if (isCreateTrackDTO(body)) {
+  async post ({ json }: httpRequest, res: ServerResponse) {
+    if (isCreateTrackDTO(json)) {
       try {
-        await tracksService.createTrack(body);
+        await tracksService.createTrack(json);
         res.writeHead(CREATED)
       } catch (e) {
         res.writeHead(INTERNAL_SERVER_ERROR)
@@ -39,14 +39,14 @@ class TracksController extends Controller<UpdateTrackDTO, CreateTrackDTO> {
     }
   }
 
-  async put (id: string, body: UpdateTrackDTO, res: ServerResponse) {
-    if(isUpdateTrackDTO(body)) {
-      const userData = await tracksService.getTrack(id);
+  async put ({ json, uuid }: httpRequest, res: ServerResponse) {
+    if(isUpdateTrackDTO(json) && uuid) {
+      const userData = await tracksService.getTrack(uuid);
       if (!userData) {
         res.writeHead(NOT_FOUND);
         return res.end();
       }
-      await tracksService.updateTrack(id, body)
+      await tracksService.updateTrack(uuid, json)
       res.writeHead(OK);
       res.end();
     } else {
@@ -55,12 +55,16 @@ class TracksController extends Controller<UpdateTrackDTO, CreateTrackDTO> {
     }
   }
 
-  async delete (id: string, res: ServerResponse) {
-    try {
-      const isDeleted = await tracksService.deleteTrack(id);
-      res.writeHead(isDeleted ? NO_CONTENT : NOT_FOUND);
-    } catch (e) {
-      res.writeHead(INTERNAL_SERVER_ERROR);
+  async delete ({ uuid }: httpRequest, res: ServerResponse) {
+    if(uuid) {
+      try {
+        const isDeleted = await tracksService.deleteTrack(uuid);
+        res.writeHead(isDeleted ? NO_CONTENT : NOT_FOUND);
+      } catch (e) {
+        res.writeHead(INTERNAL_SERVER_ERROR);
+      }
+    } else {
+      res.writeHead(BAD_REQUEST);
     }
     res.end();
   }

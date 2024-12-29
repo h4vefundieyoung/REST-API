@@ -27,6 +27,11 @@ class AlbumsService {
   async deleteAlbum (id: string) {
     const index = mockedDB.albums.findIndex((album) => album.id === id);
     if (~index) {
+      mockedDB.favorites.albums = mockedDB.favorites.albums.filter((albumId) => albumId !== id);
+      mockedDB.tracks = mockedDB.tracks.map((entity) => {
+        if (entity.albumId === id) entity.albumId = null;
+        return entity;
+      });
       return Boolean(mockedDB.albums.splice(index, 1));
     }
     return false;

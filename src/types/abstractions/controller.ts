@@ -1,8 +1,10 @@
-import { ServerResponse } from 'node:http';
+import { ServerResponse } from "node:http";
 
-export abstract class Controller<U = unknown, C = unknown> {
-  abstract get (id: string | null, res: ServerResponse): void
-  abstract put (id: string | null, body: U, res: ServerResponse): void
-  abstract delete (id: string | null, res: ServerResponse): void
-  abstract post (body: C, res: ServerResponse): void
+import type { httpRequest } from "../http"
+
+export abstract class Controller {
+  abstract get (req: httpRequest, res: ServerResponse): void
+  abstract put (req: httpRequest, res: ServerResponse): void
+  abstract delete (req: httpRequest, res: ServerResponse): void
+  abstract post (req: httpRequest, res: ServerResponse): void
 }

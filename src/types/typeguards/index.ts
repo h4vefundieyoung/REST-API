@@ -9,3 +9,4 @@ export { isUpdateArtistDTO } from "./artist/isUpdateArtistDto";
 export { isAlbumDTO } from "./album/isAlbumDto";
 export { isCreateAlbumDTO } from "./album/isCreateAlbumDto";
 export { isUpdateAlbumDTO } from "./album/isUpdateAlbumDto";
+export { isFavoritesCollectionKey } from "./favorites/isFavoriteCollectionKey";

@@ -3,14 +3,14 @@ import { ServerResponse } from "http";
 import { Controller } from "../types/abstractions";
 import { artistsService } from "../services";
 import { isCreateArtistDTO, isUpdateArtistDTO } from "../types/typeguards";
-import { httpStatus } from "../types/http/httpStatus";
+import { httpStatus, httpRequest } from "../types/http";
 
 const { OK, CREATED, INTERNAL_SERVER_ERROR, NOT_FOUND, BAD_REQUEST, NO_CONTENT } = httpStatus;
 
-class ArtistsController extends Controller<UpdateArtistDTO, CreateArtistDTO> {
-  async get (id: string | null, res: ServerResponse) {
+class ArtistsController extends Controller {
+  async get ({ uuid }: httpRequest, res: ServerResponse) {
     try {
-      const data = id ? await artistsService.getArtist(id) : await artistsService.getArtists();
+      const data = uuid ? await artistsService.getArtist(uuid) : await artistsService.getArtists();
       if (data) {
         res.writeHead(OK, { "Content-Type": "application/json" });
         res.end(JSON.stringify(data));
@@ -24,10 +24,10 @@ class ArtistsController extends Controller<UpdateArtistDTO, CreateArtistDTO> {
     }
   }
 
-  async post (body: CreateArtistDTO, res: ServerResponse) {
-    if (isCreateArtistDTO(body)) {
+  async post ({ json }: httpRequest, res: ServerResponse) {
+    if (isCreateArtistDTO(json)) {
       try {
-        await artistsService.createArtist(body);
+        await artistsService.createArtist(json);
         res.writeHead(CREATED)
       } catch (e) {
         res.writeHead(INTERNAL_SERVER_ERROR)
@@ -39,14 +39,14 @@ class ArtistsController extends Controller<UpdateArtistDTO, CreateArtistDTO> {
     }
   }
 
-  async put (id: string, body: UpdateArtistDTO, res: ServerResponse) {
-    if(isUpdateArtistDTO(body)) {
-      const userData = await artistsService.getArtist(id);
+  async put ({ uuid, json }: httpRequest, res: ServerResponse) {
+    if(isUpdateArtistDTO(json) && uuid) {
+      const userData = await artistsService.getArtist(uuid);
       if (!userData) {
         res.writeHead(NOT_FOUND);
         return res.end();
       }
-      await artistsService.updateArtist(id, body)
+      await artistsService.updateArtist(uuid, json)
       res.writeHead(OK);
       res.end();
     } else {
@@ -55,12 +55,16 @@ class ArtistsController extends Controller<UpdateArtistDTO, CreateArtistDTO> {
     }
   }
 
-  async delete (id: string, res: ServerResponse) {
-    try {
-      const isDeleted = await artistsService.deleteArtist(id);
-      res.writeHead(isDeleted ? NO_CONTENT : NOT_FOUND);
-    } catch (e) {
-      res.writeHead(INTERNAL_SERVER_ERROR);
+  async delete ({ uuid }: httpRequest, res: ServerResponse) {
+    if(uuid) {
+      try {
+        const isDeleted = await artistsService.deleteArtist(id);
+        res.writeHead(isDeleted ? NO_CONTENT : NOT_FOUND);
+      } catch (e) {
+        res.writeHead(INTERNAL_SERVER_ERROR);
+      }
+    } else {
+      res.writeHead(BAD_REQUEST);
     }
     res.end();
   }

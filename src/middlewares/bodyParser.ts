@@ -1,8 +1,9 @@
 import { MiddlewareManager } from "./middlewareManager";
 
-import type { middlewareT, requestT } from "./middlewareManager";
+import type { middlewareT } from "./middlewareManager";
+import type { httpRequest } from "../types/http"
 
-const parseBody: middlewareT = (req: requestT) => {
+const parseBody: middlewareT = (req: httpRequest) => {
   const method = req.method?.toLowerCase();
 
   return new Promise((res, rej) => {

@@ -1,9 +1,8 @@
 import { ServerResponse } from "node:http";
 
 import { usersController, tracksController, artistsController, albumsController } from "../controllers";
-import { httpMethod, httpStatus } from "../types/http";
+import { httpMethod, httpStatus, httpRequest } from "../types/http";
 
-import type { requestT } from "../middlewares";
 import type { Controller } from "../types/abstractions";
 
 const { GET, POST, PUT, DELETE } = httpMethod;
@@ -17,9 +16,9 @@ class AppRouter {
     albums: albumsController
   }
   
-  processRequest (req: requestT, res: ServerResponse) {
-    const { method, json, parsedUrl, uuid } = req;
-    const { pathname } = parsedUrl!;
+  processRequest (req: httpRequest, res: ServerResponse) {
+    const { method, parsedUrl } = req;
+    const { pathname } = parsedUrl;
     const separatorIndex = pathname.indexOf("/", 1);
     const endpoint = ~separatorIndex ? pathname.slice(1) : pathname.slice(1, separatorIndex);
     const controller = this.controllers[endpoint];
@@ -31,10 +30,10 @@ class AppRouter {
     }
     
     switch(method) {
-      case POST: { controller.post(json, res); break; }
-      case PUT: { controller.put(uuid, json, res); break; }
-      case DELETE: { controller.delete(uuid, res); break; }
-      case GET: { controller.get(uuid, res); break; }
+      case POST: { controller.post(req, res); break; }
+      case PUT: { controller.put(req, res); break; }
+      case DELETE: { controller.delete(req, res); break; }
+      case GET: { controller.get(req, res); break; }
       default: { 
         res.writeHead(NOT_ALLOWED); 
         res.end(); 

@@ -5,9 +5,19 @@ export const mockedDB: {
   tracks: Track[]
   artists: Artist[]
   albums: Album[]
+  favorites: {
+    tracks: string[],
+    albums: string[],
+    artists: string[]
+  }
 } = {
   users: [],
   tracks: [],
   artists: [],
-  albums: []
+  albums: [],
+  favorites: {
+    tracks: [],
+    albums: [],
+    artists: []
+  }
 };

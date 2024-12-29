@@ -27,6 +27,7 @@ class TracksService {
   async deleteTrack (id: string) {
     const index = mockedDB.tracks.findIndex((track) => track.id === id);
     if (~index) {
+      mockedDB.favorites.tracks = mockedDB.favorites.tracks.filter((trackId) => trackId !== id);
       return Boolean(mockedDB.tracks.splice(index, 1));
     }
     return false;
