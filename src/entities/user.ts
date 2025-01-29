@@ -4,7 +4,7 @@ import { Entity } from "../types/abstractions/entity";
 
 export class User extends Entity {
   salt = genSaltSync();
-  version: 1;
+  version = 1;
   
   login: string;
   password: string;

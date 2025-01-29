@@ -10,7 +10,6 @@ const parseURL: middlewareT = async (req: httpRequest) => {
   const parsedUrl = new URL(req.url || "", `http://${req.headers.host}`);
   const index = parsedUrl.pathname.lastIndexOf("/");
   const uuid = index ? parsedUrl.pathname.slice(index + 1) : null;
-
   if(uuid !== null) {
     const isUuid = validate(uuid);
     if(!isUuid) {

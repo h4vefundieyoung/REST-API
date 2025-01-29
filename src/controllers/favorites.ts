@@ -35,7 +35,7 @@ class FavoritesController extends Controller {
         const uuidExists = await this.services[collection].getEntity(uuid);
         if (!uuidExists) {
           res.writeHead(UNPROCESSABLE_ENTITY)
-          res.end();
+          return res.end();
         }
         await favoritesService.addFavorite(collection, uuid);
         res.writeHead(CREATED)

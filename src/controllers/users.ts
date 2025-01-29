@@ -11,7 +11,7 @@ class UsersController extends Controller {
   async get ({ uuid }: httpRequest, res: ServerResponse) {
     try {
       const data = uuid ? await usersService.getUser(uuid) : await usersService.getUsers();
-
+      
       if (data) {
         res.writeHead(OK, { "Content-Type": "application/json" });
         res.end(JSON.stringify(data));

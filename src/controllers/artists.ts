@@ -58,7 +58,7 @@ class ArtistsController extends Controller {
   async delete ({ uuid }: httpRequest, res: ServerResponse) {
     if(uuid) {
       try {
-        const isDeleted = await artistsService.deleteArtist(id);
+        const isDeleted = await artistsService.deleteArtist(uuid);
         res.writeHead(isDeleted ? NO_CONTENT : NOT_FOUND);
       } catch (e) {
         res.writeHead(INTERNAL_SERVER_ERROR);

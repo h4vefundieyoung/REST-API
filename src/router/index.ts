@@ -1,8 +1,8 @@
 import { ServerResponse } from "node:http";
 
-import { usersController, tracksController, artistsController, albumsController } from "../controllers";
+import { usersController, tracksController, artistsController, albumsController, favoritesController } from "../controllers";
 import { httpMethod, httpStatus, httpRequest } from "../types/http";
-
+import { mockedDB } from "../database";
 import type { Controller } from "../types/abstractions";
 
 const { GET, POST, PUT, DELETE } = httpMethod;
@@ -13,16 +13,17 @@ class AppRouter {
     users: usersController,
     tracks: tracksController,
     artists: artistsController,
-    albums: albumsController
+    albums: albumsController,
+    favorites: favoritesController
   }
   
   processRequest (req: httpRequest, res: ServerResponse) {
     const { method, parsedUrl } = req;
     const { pathname } = parsedUrl;
     const separatorIndex = pathname.indexOf("/", 1);
-    const endpoint = ~separatorIndex ? pathname.slice(1) : pathname.slice(1, separatorIndex);
+    const endpoint = ~separatorIndex ? pathname.slice(1, separatorIndex) : pathname.slice(1);
     const controller = this.controllers[endpoint];
-    
+
     if (!controller) {
       res.writeHead(NOT_FOUND);
       res.end();
